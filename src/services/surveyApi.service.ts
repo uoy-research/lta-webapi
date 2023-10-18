@@ -35,7 +35,7 @@ export const checkIfAuthenticatedAdmin = (req: Request, res: Response, callback:
                 .auth()
                 .verifyIdToken(ah);
 
-            var verifiedUserId = userInfo.email.replace("@humlablu.com", "");
+            var verifiedUserId = userInfo.email.replace("@york.ac.uk", "");
 
             if (!ADMIN_USERNAMES.includes(verifiedUserId)) {
                 SurveyService.dbgMsg("Unauthorized: " + verifiedUserId + " is not admin.");
@@ -58,7 +58,7 @@ export const checkIfAuthenticatedUserIdOrAdmin = (userId: String, req: Request, 
                 .auth()
                 .verifyIdToken(ah);
 
-            var verifiedUserId = userInfo.email.replace("@humlablu.com", "");
+            var verifiedUserId = userInfo.email.replace("@york.ac.uk", "");
 
             if (verifiedUserId != userId && !ADMIN_USERNAMES.includes(verifiedUserId)) {
                 SurveyService.dbgMsg("Unauthorized: " + verifiedUserId + " imposing as " + userId);
@@ -80,7 +80,7 @@ export const getAuthenticatedUserId = (req: Request, res: Response, callback: (u
                 .auth()
                 .verifyIdToken(ah);
 
-            var verifiedUserId = userInfo.email.replace("@humlablu.com", "");
+            var verifiedUserId = userInfo.email.replace("@york.ac.uk", "");
 
             return callback(verifiedUserId);
         } catch (e) {
