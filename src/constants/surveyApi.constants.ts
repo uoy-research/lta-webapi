@@ -1,9 +1,10 @@
 export const PING_MESSAGE = "pong from surveyApi =)";
 export const PORT = 9001;
 // export const WEBAPP_URL = "http://ht-lang-track.ht.lu.se:443/";
+export const WEBAPP_URL = "http://langtrackappdev.york.ac.uk:443/";
 
-export const MONGO_URL = "mongodb://localhost:27017/Survey";
-// export const MONGO_URL = "mongodb://mongodb:27017/Survey";
+//export const MONGO_URL = "mongodb://localhost:27017/Survey";
+export const MONGO_URL = "mongodb://mongodb:27017/Survey";
 
 export const ADMIN_USERNAMES = ["josef", "stephan", "henriette", "jonas", "marianne"]
 
