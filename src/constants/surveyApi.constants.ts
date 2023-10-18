@@ -6,7 +6,7 @@ export const WEBAPP_URL = "http://langtrackappdev.york.ac.uk:443/";
 //export const MONGO_URL = "mongodb://localhost:27017/Survey";
 export const MONGO_URL = "mongodb://mongodb:27017/Survey";
 
-export const ADMIN_USERNAMES = ["josef", "stephan", "henriette", "jonas", "marianne"]
+export const ADMIN_USERNAMES = ["viktor.czyzewski"]
 
 export const JMESPATH_dataset = `{
     "userId": userId,
