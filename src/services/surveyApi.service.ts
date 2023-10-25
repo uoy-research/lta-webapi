@@ -12,6 +12,7 @@ import { Survey, Assignment, AssignmentResults, Dataset, User, Group } from "../
 
 import {
     ADMIN_USERNAMES,
+    EMAIL_DOMAIN,
     PING_MESSAGE,
     JMESPATH_dataset,
     NOTIFY_PUBLISH_SINCE_MINUTES,
@@ -36,7 +37,7 @@ export const checkIfAuthenticatedAdmin = (req: Request, res: Response, callback:
                 .auth()
                 .verifyIdToken(ah);
 
-            var verifiedUserId = userInfo.email.replace("@york.ac.uk", "");
+            var verifiedUserId = userInfo.email.replace(EMAIL_DOMAIN, "");
 
             if (!ADMIN_USERNAMES.includes(verifiedUserId)) {
                 SurveyService.dbgMsg("Unauthorized: " + verifiedUserId + " is not admin.");
@@ -59,7 +60,7 @@ export const checkIfAuthenticatedUserIdOrAdmin = (userId: String, req: Request, 
                 .auth()
                 .verifyIdToken(ah);
 
-            var verifiedUserId = userInfo.email.replace("@york.ac.uk", "");
+            var verifiedUserId = userInfo.email.replace(EMAIL_DOMAIN, "");
 
             if (verifiedUserId != userId && !ADMIN_USERNAMES.includes(verifiedUserId)) {
                 SurveyService.dbgMsg("Unauthorized: " + verifiedUserId + " imposing as " + userId);
@@ -81,7 +82,7 @@ export const getAuthenticatedUserId = (req: Request, res: Response, callback: (u
                 .auth()
                 .verifyIdToken(ah);
 
-            var verifiedUserId = userInfo.email.replace("@york.ac.uk", "");
+            var verifiedUserId = userInfo.email.replace(EMAIL_DOMAIN, "");
 
             return callback(verifiedUserId);
         } catch (e) {

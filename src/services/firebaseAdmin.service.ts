@@ -1,11 +1,12 @@
+import { FIREBASE_DATABASE } from "../constants/surveyApi.constants";
+
 var admin = require("firebase-admin");
 
-var serviceAccount = require("../constants/lang-track-app-firebase-adminsdk-862cg-a80a5de2fc.json");
+var serviceAccount = require("../constants/lang-track-app-firebase-adminsdk.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    //databaseURL: "https://lang-track-app.firebaseio.com"
-    databaseURL: "https://langtrackappdev-default-rtdb.europe-west1.firebasedatabase.app"
+    databaseURL: FIREBASE_DATABASE
 })
 
 export default admin;
