@@ -1,13 +1,12 @@
-export const PING_MESSAGE = "pong from surveyApi =)";
-export const PORT = 9001;
+import config = require('config.json')
 
-export const WEBAPP_URL = "http://langtrackappdev.york.ac.uk:443/";
-export const MONGO_URL = "mongodb://mongodb:27017/Survey";
-
-export const ADMIN_USERNAMES = ["viktor.czyzewski", "stuart.lacy"];
-export const EMAIL_DOMAIN = ["@york.ac.uk"];
-
-export const FIREBASE_DATABASE = "https://langtrackappdev-default-rtdb.europe-west1.firebasedatabase.app";
+export const PING_MESSAGE = config.ping_message
+export const PORT = config.port
+export const WEBAPP_URL = config.webapp_url
+export const MONGO_URL = config.mongo_url
+export const ADMIN_USERNAMES = config.admin_usernames
+export const EMAIL_DOMAIN = config.email_domain
+export const FIREBASE_DATABASE = config.firebase_database
 
 export const JMESPATH_dataset = `{
     "userId": userId,
