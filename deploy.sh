@@ -8,4 +8,4 @@ sudo docker build -t "$name" .
 sudo docker save -o "$file" "$name"
 sudo chown "$USER:$USER" "$file"
 sudo docker load -i "$file"
-rsync -rva docker-lta-api-latest.tar "$remote:~/docker-lta-api-latest.tar"
+rsync -rva docker-lta-api-latest.tar "$remote:~/langtrackapp/docker-lta-api-latest.tar"
