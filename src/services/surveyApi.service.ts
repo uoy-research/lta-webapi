@@ -8,6 +8,8 @@ var moment = require('moment-timezone');
 
 var jmespath = require('jmespath');
 
+const TIMEZONE = "Europe/London"
+
 import { Survey, Assignment, AssignmentResults, Dataset, User, Group } from "../models/survey.model";
 
 import {
@@ -685,7 +687,7 @@ export class SurveyService {
             }
 
             var daysInSchedule: number = 0;
-            const userTz = "Europe/Stockholm";
+            const userTz = TIMEZONE;
             for (var m = moment.tz(startYMD, userTz); m.diff(moment.tz(endYMD, userTz), 'days') <= 0; m.add(1, 'days')) {
                 daysInSchedule++;
                 SurveyService.dbgMsg("Scheduling for " + userTz + " date " + m.format('YYYY-MM-DD'));
@@ -738,7 +740,7 @@ export class SurveyService {
                 SurveyService.dbgMsg("Scheduling for date " + m.format('YYYY-MM-DD'));
                 for (var i = 0; i < hours.length; i = i + 1) {
                     var h = hours[i];
-                    var publishAtMoment = moment.tz(m.format('YYYY-MM-DD') + " " + h, "Europe/Stockholm"); //TODO: now assuming admin is in sthlm
+                    var publishAtMoment = moment.tz(m.format('YYYY-MM-DD') + " " + h, TIMEZONE); //TODO: now assuming admin is in sthlm
                     SurveyService.dbgMsg("publishAtMoment is " + publishAtMoment);
 
 
@@ -1575,5 +1577,5 @@ function getPublishAtForAssignmentBasedOnUser(publishFrom: any, publishTo: any, 
 
     let minuteDiff = moment(publishTo).diff(moment(publishFrom), "minutes", true);
     var skew = SurveyService.pseudorandomSkew(assignmentId, userId, minuteDiff);
-    return moment(publishFrom, "Europe/Stockholm").add(skew, "m");
+    return moment(publishFrom, TIMEZONE).add(skew, "m");
 }
