@@ -1,8 +1,8 @@
-FROM node:12
+FROM node:lts-alpine
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json ./
 
 RUN npm install
 # If you are building your code for production
@@ -15,7 +15,7 @@ COPY . .
 
 EXPOSE 9001 
 
-ADD start.sh /
-RUN chmod +x /start.sh
-CMD ["/start.sh"]
+RUN sleep 10
+RUN npm run build
+CMD ["npm", "run", "start"]
 
