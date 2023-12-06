@@ -38,9 +38,7 @@ class Api {
 
     private setMongoConfig() {
         mongoose.Promise = global.Promise;
-        mongoose.connect(MONGO_URL, {
-            useNewUrlParser: true
-        });
+        mongoose.connect(MONGO_URL, { });
     }
 
     private startBackgroundRunner() {
