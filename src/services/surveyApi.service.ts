@@ -128,13 +128,13 @@ export class SurveyService {
         checkIfAuthenticatedAdmin(req, res, (uid: string) => {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
 
-            User.find({}, (error: Error, user: MongooseDocument) => {
+            User.find({}).sort('-createdAt').then((error: Error, user: MongooseDocument) => {
                 if (error) {
                     res.send(error);
                 } else {
                     res.json(user);
                 }
-            }).sort('-createdAt');
+            });
 
         });
     }
@@ -142,7 +142,7 @@ export class SurveyService {
 
     private getDeviceRegistrationTokenFromUserId(userId: string, callback: (deviceRegistrationToken: string) => void) {
 
-        User.findOne({ "userId": userId }, (error: Error, user: MongooseDocument) => {
+        User.findOne({ "userId": userId }).then((error: Error, user: MongooseDocument) => {
             if (error) {
                 console.log(error);
             } else {
@@ -154,7 +154,7 @@ export class SurveyService {
 
     private getTimezoneFromUserId(userId: string, callback: (timezone: String) => void) {
 
-        User.findOne({ "userId": userId }, (error: Error, user: MongooseDocument) => {
+        User.findOne({ "userId": userId }).then((error: Error, user: MongooseDocument) => {
             if (error) {
                 console.log(error);
             } else {
@@ -170,7 +170,7 @@ export class SurveyService {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
 
             SurveyService.dbgReq(req);
-            User.findOne({ userId: req.params.id }, (error: Error, user: MongooseDocument) => {
+            User.findOne({ userId: req.params.id }).then((error: Error, user: MongooseDocument) => {
                 if (error) {
                     res.send(error);
                 } else {
@@ -195,7 +195,7 @@ export class SurveyService {
                 condition,
                 req.body,
                 options,
-                (error: Error, user: any) => {
+            ).then((error: Error, user: any) => {
                     if (error) {
                         res.send(error);
                     } else {
@@ -216,13 +216,13 @@ export class SurveyService {
         checkIfAuthenticatedAdmin(req, res, (uid: string) => {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
 
-            Group.find({}, (error: Error, group: MongooseDocument) => {
+            Group.find({}).sort('-createdAt').then((error: Error, group: MongooseDocument) => {
                 if (error) {
                     res.send(error);
                 } else {
                     res.json(group);
                 }
-            }).sort('-createdAt');
+            });
         });
     }
 
@@ -237,7 +237,7 @@ export class SurveyService {
             Group.findOne(
                 condition,
                 req.body,
-                (error: Error, group: any) => {
+            ).then((error: Error, group: any) => {
                     if (error) { res.send(error); }
                     else {
                         if (group) { res.status(409).send("Group " + req.params.id + " already exists."); }
@@ -249,7 +249,7 @@ export class SurveyService {
                                 condition,
                                 req.body,
                                 options,
-                                (error: Error, group: any) => {
+                            ).then((error: Error, group: any) => {
                                     if (error) { res.send(error); }
 
                                     res.status(201).send("Group " + req.params.id + " created.");
@@ -268,7 +268,7 @@ export class SurveyService {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
 
             SurveyService.dbgReq(req);
-            Group.findOne({ groupId: req.params.id }, (error: Error, group: MongooseDocument) => {
+            Group.findOne({ groupId: req.params.id }).then((r: Error, group: MongooseDocument) => {
                 if (error) {
                     res.send(error);
                 } else {
@@ -288,7 +288,7 @@ export class SurveyService {
                 {
                     userIds: { $in: [req.params.uid] }
                 },
-                (error: Error, group: MongooseDocument) => {
+            ).then((error: Error, group: MongooseDocument) => {
                     if (error) {
                         res.send(error);
                     } else {
@@ -312,7 +312,7 @@ export class SurveyService {
                 condition,
                 req.body,
                 options,
-                (error: Error, group: any) => {
+            ).then((error: Error, group: any) => {
                     if (error) {
                         res.send(error);
                     } else {
@@ -335,7 +335,7 @@ export class SurveyService {
             Group.findOneAndDelete(
                 condition,
                 req.body,
-                (error: Error, group: any) => {
+            ).then((error: Error, group: any) => {
                     if (error) {
                         res.send(error);
                     } else {
@@ -355,13 +355,13 @@ export class SurveyService {
         checkIfAuthenticatedAdmin(req, res, (uid: string) => {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
 
-            Survey.find({}, (error: Error, surveys: MongooseDocument) => {
+            Survey.find({}).sort('-createdAt').then((error: Error, surveys: MongooseDocument) => {
                 if (error) {
                     res.send(error)
                 } else {
                     res.json(surveys)
                 }
-            }).sort('-createdAt');
+            });
         });
     }
 
@@ -370,13 +370,13 @@ export class SurveyService {
         checkIfAuthenticatedAdmin(req, res, (uid: string) => {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
 
-            Survey.findOne({ _id: req.params.id }, (error: Error, survey: MongooseDocument) => {
+            Survey.findOne({ _id: req.params.id }).sort('-createdAt').then((error: Error, survey: MongooseDocument) => {
                 if (error) {
                     res.send(error);
                 } else {
                     res.json(survey);
                 }
-            }).sort('-createdAt');
+            });
         });
     }
 
@@ -385,13 +385,13 @@ export class SurveyService {
         checkIfAuthenticatedAdmin(req, res, (uid: string) => {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
 
-            Survey.find({ "name": { "$regex": req.query.t, "$options": "i" } }, (error: Error, surveys: MongooseDocument) => {
+            Survey.find({ "name": { "$regex": req.query.t, "$options": "i" } }).sort('-createdAt').then((error: Error, surveys: MongooseDocument) => {
                 if (error) {
                     res.send(error);
                 } else {
                     res.json(surveys);
                 }
-            }).sort('-createdAt');
+            });
 
         });
     }
@@ -401,13 +401,13 @@ export class SurveyService {
         checkIfAuthenticatedAdmin(req, res, (uid: string) => {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
 
-            User.find({ "userId": { "$regex": req.query.t, "$options": "i" } }, (error: Error, users: MongooseDocument) => {
+            User.find({ "userId": { "$regex": req.query.t, "$options": "i" } }).sort('-createdAt').then((error: Error, users: MongooseDocument) => {
                 if (error) {
                     res.send(error);
                 } else {
                     res.json(users);
                 }
-            }).sort('-createdAt');
+            });
 
         });
     }
@@ -423,13 +423,13 @@ export class SurveyService {
                         { "name": { "$regex": req.query.t, "$options": "i" } },
                         { "userId": { "$regex": req.query.t, "$options": "i" } },
                         { "groupId": { "$regex": req.query.t, "$options": "i" } }]
-                }, (error: Error, assignments: MongooseDocument) => {
+                }).sort('-publishedAt').then((error: Error, assignments: MongooseDocument) => {
                     if (error) {
                         res.send(error);
                     } else {
                         res.json(assignments);
                     }
-                }).sort('-publishedAt');
+                });
         });
     }
 
@@ -455,7 +455,7 @@ export class SurveyService {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
 
             const surveyID = req.params.id;
-            Survey.findByIdAndDelete(surveyID, (error: Error, deleted: any) => {
+            Survey.findByIdAndDelete(surveyID).then((error: Error, deleted: any) => {
                 if (error) {
                     res.send(error);
                 } else {
@@ -478,7 +478,7 @@ export class SurveyService {
             Survey.findByIdAndUpdate(
                 surveyId,
                 req.body,
-                (error: Error, survey: any) => {
+            ).then((error: Error, survey: any) => {
                     if (error) {
                         res.send(error);
                     } else {
@@ -508,7 +508,7 @@ export class SurveyService {
             // Assignment.findOneAndUpdate(condition, updateClause, (error: Error) => {
             //     if (error) { res.send(error); }
             //     else {
-            //         Assignment.findOne(condition, (error: Error, assignment: MongooseDocument) => {
+            //         Assignment.findOne(condition).then((error: Error, assignment: MongooseDocument) => {
             //             if (error) {
             //                 res.send(error);
             //             } else {
@@ -524,7 +524,7 @@ export class SurveyService {
 
             // TODO: delete above when below rewrite works
 
-            Assignment.findOne(condition, (error: Error, assignment: MongooseDocument) => {
+            Assignment.findOne(condition).then((error: Error, assignment: MongooseDocument) => {
                 if (error) { res.send(error); } else {
                     if (assignment) {
                         const groupId = assignment.get("groupId");
@@ -532,7 +532,7 @@ export class SurveyService {
 
                             AssignmentResults.findOneAndUpdate(
                                 { assignment: req.params.aid, userId: uid}, updateClause,
-                                (error: Error) => {
+                            ).then((error: Error) => {
                                     if (error) { console.log(error); }
                                     else {
                                         res.status(201).send("the Dataset has been stored.")
@@ -542,10 +542,10 @@ export class SurveyService {
 
 
                         } else {
-                            Assignment.findOneAndUpdate(condition, updateClause, (error: Error) => {
+                            Assignment.findOneAndUpdate(condition, updateClause).then((error: Error) => {
                                 if (error) { res.send(error); }
                                 else {
-                                    Assignment.findOne(condition, (error: Error, assignment: MongooseDocument) => {
+                                    Assignment.findOne(condition).then((error: Error, assignment: MongooseDocument) => {
                                         if (error) {
                                             res.send(error);
                                         } else {
@@ -580,7 +580,7 @@ export class SurveyService {
             callback(409, "no user. ")
         }
 
-        Survey.findOne({ _id: surveyId }, (error: Error, survey: MongooseDocument) => {
+        Survey.findOne({ _id: surveyId }).then((error: Error, survey: MongooseDocument) => {
             if (error) {
                 console.log(error);
                 callback(500, error);
@@ -611,7 +611,7 @@ export class SurveyService {
             callback(409, "no group. ")
         }
 
-        Survey.findOne({ _id: surveyId }, (error: Error, survey: MongooseDocument) => {
+        Survey.findOne({ _id: surveyId }).then((error: Error, survey: MongooseDocument) => {
             if (error) {
                 console.log(error);
                 callback(500, error);
@@ -778,7 +778,7 @@ export class SurveyService {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
 
             const assignmentId = req.params.aid;
-            Assignment.findByIdAndDelete(assignmentId, (error: Error, deleted: any) => {
+            Assignment.findByIdAndDelete(assignmentId).then((error: Error, deleted: any) => {
                 if (error) {
                     res.send(error);
                 } else {
@@ -796,7 +796,7 @@ export class SurveyService {
 
             let query = this.getQuerySortAndFilter(moment(from, "X").valueOf(), moment(to, "X").valueOf(), sortBy, Assignment);
 
-            query.exec(function (error: Error, assignments: MongooseDocument) {
+            query.then(function (error: Error, assignments: MongooseDocument) {
                 if (error) {
                     res.send(error);
                 } else {
@@ -811,7 +811,7 @@ export class SurveyService {
         checkIfAuthenticatedAdmin(req, res, (uid: string) => {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
 
-            AssignmentResults.find((error: Error, ars: any) => {
+            AssignmentResults.find().then((error: Error, ars: any) => {
                 if (error) {
                     res.send(error);
                 } else {
@@ -827,7 +827,7 @@ export class SurveyService {
 
             const condition = { _id: req.params.arid };
 
-            AssignmentResults.findOne(condition, (error: Error, ar: any) => {
+            AssignmentResults.findOne(condition).then((error: Error, ar: any) => {
                 if (error) {
                     res.send(error);
                 } else { // TODO all if(error)'s need elses
@@ -849,7 +849,7 @@ export class SurveyService {
             AssignmentResults.findOneAndDelete(
                 condition,
                 req.body,
-                (error: Error, ar: any) => {
+            ).then((error: Error, ar: any) => {
                     if (error) {
                         res.send(error);
                     } else {
@@ -869,7 +869,7 @@ export class SurveyService {
             const condition = { assignment: req.params.aid };
             AssignmentResults.find(
                 condition,
-                (error: Error, ars: any) => {
+            ).then((error: Error, ars: any) => {
                     if (error) {
                         res.send(error);
                     } else {
@@ -918,7 +918,7 @@ export class SurveyService {
         checkIfAuthenticatedAdmin(req, res, (uid: string) => {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
 
-            Assignment.findOne({ _id: req.params.aid }, (error: Error, assignment: MongooseDocument) => {
+            Assignment.findOne({ _id: req.params.aid }).then((error: Error, assignment: MongooseDocument) => {
                 if (error) {
                     res.send(error);
                 } else {
@@ -937,7 +937,7 @@ export class SurveyService {
 
             Assignment.findOne(
                 condition,
-                (error: Error, assignment: any) => {
+            ).then((error: Error, assignment: any) => {
                     if (error) { console.log(error); }
                     else {
                         var updateClause;
@@ -963,7 +963,7 @@ export class SurveyService {
                             Assignment.findOneAndUpdate(
                                 condition,
                                 updateClause,
-                                (error: Error, assignment: any) => {
+                            ).then((error: Error, assignment: any) => {
                                     if (error) { console.log(error); }
                                 });
 
@@ -972,7 +972,7 @@ export class SurveyService {
                         } else {
                             AssignmentResults.findOne(
                                 { assignment: req.params.aid, userId: uid },
-                                (error: Error, ar: any) => {
+                            ).then((error: Error, ar: any) => {
                                     if (error) { console.log(error); }
                                     else {
                                         var updateClause;
@@ -998,7 +998,7 @@ export class SurveyService {
                                             AssignmentResults.findOneAndUpdate(
                                                 { assignment: req.params.aid, userId: uid },
                                                 updateClause,
-                                                (error: Error) => {
+                                            ).then((error: Error) => {
                                                     if (error) { console.log(error); }
                                                 })
 
@@ -1025,7 +1025,7 @@ export class SurveyService {
 
             var condition = { "groupId": req.params.gid }
 
-            Assignment.find(condition, (error: Error, assignments: any) => {
+            Assignment.find(condition).lean().sort('publishFrom').then((error: Error, assignments: any) => {
                 if (error) {
                     res.send(error);
                 } else {
@@ -1034,7 +1034,7 @@ export class SurveyService {
                     });
                     res.json(assignments.sort((a: any, b: any) => a.publishFrom < b.publishFrom ? -1 : a.publishFrom > b.publishFrom ? 1 : 0));
                 }
-            }).lean().sort('publishFrom');
+            });
 
         })
     }
@@ -1076,7 +1076,7 @@ export class SurveyService {
                             }
                         }
 
-                        Assignment.find(condition, (error: Error, assignments: any) => {
+                        Assignment.find(condition).lean().sort('-publishedAt').then((error: Error, assignments: any) => {
                             if (error) { res.send(error); }
                             else {
                                 addPublishAtToAssignmentsBasedOnUser(assignments, userId);
@@ -1092,7 +1092,7 @@ export class SurveyService {
                                 });
 
                                 // Get all assignmentresults for those assignment ids
-                                AssignmentResults.find().where('assignment').in(arrayOfAssIds).exec((err, assignmentResults: any) => {
+                                AssignmentResults.find().where('assignment').in(arrayOfAssIds).then((err, assignmentResults: any) => {
 
                                     assignmentResults.forEach((ar: any) => {
                                         assignments.forEach((a: any ) => {
@@ -1111,9 +1111,7 @@ export class SurveyService {
                                     res.json(assignments.sort((a: any, b: any) => a.publishAt < b.publishAt ? -1 : a.publishAt > b.publishAt ? 1 : 0))
                                 });
                             }
-                        }).lean().sort('-publishedAt').then(
-                            
-                        );
+                        });
                     }
                 }
             );
@@ -1144,13 +1142,13 @@ export class SurveyService {
 
             const surveyId = req.params.sid as String;
 
-            Assignment.find({ "survey._id": surveyId }, (error: Error, assignments: any) => {
+            Assignment.find({ "survey._id": surveyId }).sort({publishAt: 1, publishFrom: 1}).then((error: Error, assignments: any) => {
                 if (error) {
                     res.send(error);
                 } else {
                     res.json(assignments);
                 }
-            }).sort({publishAt: 1, publishFrom: 1});
+            });
         });
     }
 
@@ -1168,7 +1166,7 @@ export class SurveyService {
     //                                         });
             
     //                                         // Get all assignmentresults for those assignment ids
-    //                                         AssignmentResults.find().where('assignment').in(arrayOfAssIds).exec((err, assignmentResults: any) => {
+    //                                         AssignmentResults.find().where('assignment').in(arrayOfAssIds).then((err, assignmentResults: any) => {
             
     //                                             assignmentResults.forEach((ar: any) => {
     //                                                 assignments.forEach((a: any ) => {
@@ -1235,13 +1233,13 @@ export class SurveyService {
 
             const surveyId = req.params.sid as String;
 
-            Assignment.find({ "survey._id": surveyId }, (error: Error, assignments: any) => {
+            Assignment.find({ "survey._id": surveyId }).sort('-publishedAt').then((error: Error, assignments: any) => {
                 if (error) {
                     res.send(error);
                 } else {
                     res.json(SurveyService.getDatasetsOfAssignments(assignments));
                 }
-            }).sort('-publishedAt');
+            });
         });
     }
 
@@ -1251,7 +1249,7 @@ export class SurveyService {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
             const surveyId = req.params.sid as String;
 
-            Assignment.find({ "survey._id": surveyId }, (error: Error, assignments: any) => {
+            Assignment.find({ "survey._id": surveyId }).sort('-publishedAt').then((error: Error, assignments: any) => {
 
                 if (error) {
                     res.send(error);
@@ -1268,7 +1266,7 @@ export class SurveyService {
                     }, { "unwindArrays": true }
                     );
             }
-            }).sort('-publishedAt');
+            });
         });
     }
 
@@ -1279,12 +1277,12 @@ export class SurveyService {
 
             const surveyId = req.params.sid as String;
 
-            Assignment.find({ "survey._id": surveyId }, (error: Error, assignments: any) => {
+            Assignment.find({ "survey._id": surveyId }).then((error: Error, assignments: any) => {
                 if (error) { res.send(error); }
                 else {
                     var arrayOfAssIds = assignments.map(function (a: any) { return a._id; })
 
-                    AssignmentResults.find().where('assignment').in(arrayOfAssIds).exec((err, assignmentResults: any) => {
+                    AssignmentResults.find().where('assignment').in(arrayOfAssIds).then((err, assignmentResults: any) => {
                         if (error) { res.send(error); } 
                         else {
                             const assignmentsBlob = SurveyService.getDatasetsOfAssignments(assignmentResults);
@@ -1325,7 +1323,7 @@ export class SurveyService {
                 $lte: to
             },
             publishNotifiedAt: { $exists: false }
-        }, (error: Error, assignmentResults: any) => {
+        }).populate('assignment').then((error: Error, assignmentResults: any) => {
             if (error) {
                 console.log(error);
             } else {
@@ -1349,7 +1347,7 @@ export class SurveyService {
                 });
             }
 
-        }).populate('assignment')
+        })
 
         SurveyService.dbgMsg(`Checking for publishAt within ${from} and ${to} but not yet notified. `);
 
@@ -1359,7 +1357,7 @@ export class SurveyService {
                 $lte: to
             },
             publishNotifiedAt: { $exists: false }
-        }, (error: Error, assignments: any) => {
+        }).sort('-createdAt').then((error: Error, assignments: any) => {
             if (error) {
                 console.log(error);
             } else {
@@ -1385,7 +1383,7 @@ export class SurveyService {
                 });
             }
 
-        }).sort('-createdAt');
+        });
 
         var from = moment().utc();
         var to = moment().utc().add(NOTIFY_EXPIRE_IN_MINUTES, "m");;
@@ -1399,7 +1397,7 @@ export class SurveyService {
             },
             expireNotifiedAt: { $exists: false },
             dataset: { $exists: false }
-        }, (error: Error, assignments: any) => {
+        }).sort('-createdAt').then((error: Error, assignments: any) => {
             if (error) {
                 console.log(error);
             } else {
@@ -1421,7 +1419,7 @@ export class SurveyService {
                     });
                 });
             }
-        }).sort('-createdAt');
+        });
 
         AssignmentResults.find({
             expireAt: {
@@ -1430,7 +1428,7 @@ export class SurveyService {
             },
             expireNotifiedAt: { $exists: false },
             dataset: { $exists: false }
-        }, (error: Error, assignmentResults: any) => {
+        }).populate('assignment').then((error: Error, assignmentResults: any) => {
             if (error) {
                 console.log(error);
             } else {
@@ -1455,7 +1453,7 @@ export class SurveyService {
                 });
             }
 
-        }).populate('assignment')
+        })
     }
 
     public CreateImpendingResultObjects(
@@ -1472,7 +1470,7 @@ export class SurveyService {
             publishTo: {
                 $gte: from
             },
-        }, (error: Error, assignments: any) => {
+        }).sort('-createdAt').then((error: Error, assignments: any) => {
             if (error) {
                 console.log(error);
             } else {
@@ -1487,12 +1485,12 @@ export class SurveyService {
 
                     Group.findOne({
                         groupId: a.groupId
-                    }, (error: Error, g: any) => {
+                    }).then((error: Error, g: any) => {
 
                         if (g) {
                             g.userIds.forEach((userId: any) => {
 
-                                User.findOne({ "userId": userId }, (error: Error, user: MongooseDocument) => {
+                                User.findOne({ "userId": userId }).then((error: Error, user: MongooseDocument) => {
 
                                     if (error) {
                                         console.log(error);
@@ -1502,7 +1500,7 @@ export class SurveyService {
 
                                             AssignmentResults.findOne(
                                                 { "assignment": assignmentId, "userId": userId },
-                                                (error: Error, ar: MongooseDocument) => {
+                                            ).then((error: Error, ar: MongooseDocument) => {
                                                     if (error) { console.log(error); }
                                                     else {
                                                         if (!ar) {
@@ -1522,7 +1520,7 @@ export class SurveyService {
                 });
             }
 
-        }).sort('-createdAt');
+        });
     }
 
     setAssignment(assignmentId: string, body: any) {
@@ -1531,7 +1529,7 @@ export class SurveyService {
         Assignment.findOneAndUpdate(
             condition,
             body,
-            (error: Error) => {
+        ).then((error: Error) => {
                 if (error) { console.log(error); }
             });
     }
@@ -1542,7 +1540,7 @@ export class SurveyService {
         AssignmentResults.findOneAndUpdate(
             condition,
             body,
-            (error: Error) => {
+        ).then((error: Error) => {
                 if (error) { console.log(error); }
             });
     }
