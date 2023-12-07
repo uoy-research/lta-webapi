@@ -439,7 +439,7 @@ export class SurveyService {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
 
             const newSurvey = new Survey(req.body);
-            newSurvey.save((error: Error, survey: MongooseDocument) => {
+            newSurvey.save().then((error: Error, survey: MongooseDocument) => {
                 if (error) {
                     res.send(error);
                 } else {
@@ -582,7 +582,6 @@ export class SurveyService {
 
         Survey.findOne({ _id: surveyId }).then((error: Error, survey: MongooseDocument) => {
             if (error) {
-                console.log(error);
                 callback(500, error);
             } else {
                 if (survey) {
@@ -591,8 +590,10 @@ export class SurveyService {
                         .set("survey", survey)
                         .set("publishAt", publishAt)
                         .set("expireAt", expireAt)
-                        .save();
-                    callback(201, newAssignment);
+                        .save()
+                        .then(
+                            callback(201, newAssignment)
+                        );
                 }
                 else {
                     callback(404, "Survey not found. ")
