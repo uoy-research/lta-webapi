@@ -6,6 +6,7 @@ export const MONGO_URL = "mongodb://mongodb:27017/Survey";
 
 export const ADMIN_USERNAMES = ["viktor.czyzewski", "stuart.lacy"];
 export const EMAIL_DOMAIN = ["@york.ac.uk"];
+export const TIMEZONE = 'Europe/London';
 
 export const FIREBASE_DATABASE = "https://langtrackappdev-default-rtdb.europe-west1.firebasedatabase.app";
 
