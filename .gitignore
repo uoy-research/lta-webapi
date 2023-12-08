@@ -17,3 +17,6 @@ npm-debug.log
 cheatsheet
 
 .DS_Store
+
+*.js
+!seedrandom.js
