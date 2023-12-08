@@ -1,0 +1,13 @@
+{
+"PING_MESSAGE": "pong from surveyApi =)",
+"PORT": 9001,
+
+"WEBAPP_URL": "http://example.com:443/",
+"MONGO_URL": "mongodb://mongodb:27017/Survey",
+
+"ADMIN_USERNAMES": [],
+"EMAIL_DOMAIN": ["@example.com"],
+"TIMEZONE": "Europe/London"
+
+"FIREBASE_DATABASE": "",
+}

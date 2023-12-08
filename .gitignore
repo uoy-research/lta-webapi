@@ -13,6 +13,7 @@ package-lock.json
 npm-debug.log
 
 *firebase-adminsdk*.json
+/src/constants/config.json
 
 cheatsheet
 
