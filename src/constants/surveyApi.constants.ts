@@ -1,4 +1,4 @@
-import config = require('config.json')
+import config = require('./config.json')
 
 export const PING_MESSAGE = config.ping_message
 export const PORT = config.port
