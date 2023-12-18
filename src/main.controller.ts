@@ -45,11 +45,6 @@ export class Controller {
 
     this.app.route('/api/groups/:gid/assignments').get(async (req, res) => { this.surveyService.getAssignmentsOfGroup(req, res) }); 
 
-    this.app.route('/api/users/:uid/surveys/:sid').post(async (req, res) => {
-      this.surveyService.scheduleSurveyForUserOnce(req, req.params.sid, req.params.uid, String(Math.floor((new Date()).getTime() / 1000)), res);
-    });
-
-
     this.app.route('/api/assignmentresults').get(this.surveyService.getAllAssignmentResults)
     this.app.route('/api/assignmentresults/:arid').get(this.surveyService.getAssignmentResult)
     this.app.route('/api/assignmentresults/:arid').delete(this.surveyService.deleteAssignmentResult)
@@ -58,9 +53,6 @@ export class Controller {
 
     //TODO auth: needs refactoring
 
-    this.app.route('/api/users/:uid/schedule/survey/:sid/:publishAtUnix').post(async (req, res) => {
-      this.surveyService.scheduleSurveyForUserOnce(req, req.params.sid, req.params.uid, req.params.publishAtUnix, res);
-    });
     this.app.route('/api/users/:uid/schedule/survey/:sid/:startYMD/:endYMD/:hours/:plusMinusRandomMinutes').post(async (req, res) => {
       var hoursArray: Array<string> = req.params.hours.split('+').filter(function (el) { return el.length != 0 });
       this.surveyService.scheduleSurveyForUser(req,

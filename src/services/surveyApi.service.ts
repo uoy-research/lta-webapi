@@ -617,29 +617,6 @@ export class SurveyService {
         });
     }
 
-    public scheduleSurveyForUserOnce(reqJustForAuth: Request, sid: string, uid: string, publishAtUnix: string, res: Response) {
-        SurveyService.dbgReq(reqJustForAuth);
-
-        checkIfAuthenticatedAdmin(reqJustForAuth, res, (uidJustForAuth: string) => {
-            SurveyService.dbgMsg("greetings admin " + uidJustForAuth + "!");
-
-            SurveyService.dbgMsg("scheduleSurveyForUserOnce: sid: " + sid + ", uid: " + uid + ", publishAt: " + publishAtUnix);
-
-            console.log("publishAtUnix : " + publishAtUnix);
-            var publishAtMoment = moment.unix(publishAtUnix);
-            var publishAtDate = publishAtMoment.toDate();
-            var expireAtDate = this.getExpireAtMoment(publishAtMoment).toDate()
-
-            SurveyService.dbgMsg("publishAtUnix: string : " + publishAtUnix);
-            SurveyService.dbgMsg("publishAtMoment:          " + publishAtMoment);
-            SurveyService.dbgMsg("publishAtMoment UTC     : " + publishAtMoment.utc());
-            SurveyService.dbgMsg("publishAtMoment:    date  " + publishAtMoment.toDate());
-            SurveyService.dbgMsg("publishAtMoment UTC date: " + publishAtMoment.utc().toDate());
-
-            this.saveNewAssignment(sid, uid, publishAtDate, expireAtDate.format, (code, body) => { res.status(code).send(body); });
-        });
-    }
-
     private getExpireAtMoment(publishAtMoment: any) {
         return publishAtMoment.add(EXPIRE_DEFAULT_AFTER_PUBLISH_MINUTES, "m")
     }
