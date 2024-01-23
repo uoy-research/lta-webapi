@@ -21,3 +21,4 @@ cheatsheet
 
 *.js
 !seedrandom.js
+!json2csv.js

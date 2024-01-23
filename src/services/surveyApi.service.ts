@@ -2,7 +2,7 @@
 import { Request, Response, response } from "express";
 import { MongooseDocument, Mongoose, Error } from "mongoose";
 import { Model, Document, DocumentQuery } from "mongoose";
-const converter = require('json-2-csv');
+const converter = require('./json2csv.js');
 
 var moment = require('moment-timezone');
 
@@ -1205,16 +1205,16 @@ export class SurveyService {
             .sort('-publishedAt')
             .then((assignments: any) => {
                 SurveyService.dbgMsg("found " + assignments.length + " assignments of survey " + surveyId);
-                converter.json2csv(SurveyService.getDatasetsOfAssignments(assignments), (error: Error, csv: string) => {
-                    if (error) {
-                        res.send(error);
-                    } else {
-                        console.log("here the resulting csv: " + csv);
-
-                        res.send(csv);
-                    }
-                }, { "unwindArrays": true }
-                );
+                let assignmentsBlob = SurveyService.getDatasetsOfAssignments(assignments);
+                try {
+                    let csv = converter(assignmentsBlob);
+                    console.log("here the resulting csv: " + csv);
+                    res.send(csv);
+                } catch {
+                    let err = "Could not convert JSON to CSV";
+                    console.log(err);
+                    res.send(err);
+                }
             }).catch((error: Error) => {
                 res.send(error);
             });
@@ -1236,17 +1236,17 @@ export class SurveyService {
                 .where('assignment')
                 .in(arrayOfAssIds)
                 .then((assignmentResults: any) => {
-                    const assignmentsBlob = SurveyService.getDatasetsOfAssignments(assignmentResults);
+                    let assignmentsBlob = SurveyService.getDatasetsOfAssignments(assignmentResults);
                     if (format === "csv") {
-                        converter.json2csv(assignmentsBlob, (error: Error, csv: string) => {
-                            if (error) { res.send(error); } 
-                            else {
-                                console.log("here the resulting csv: " + csv);
-    
-                                res.send(csv);
-                            }
-                        }, { "unwindArrays": true }
-                        );
+                        try {
+                            let csv = converter(assignmentsBlob);
+                            console.log("here the resulting csv: " + csv);
+                            res.send(csv);
+                        } catch {
+                            let err = "Could not convert JSON to CSV";
+                            console.log(err);
+                            res.send(err);
+                        }
                     } else {
                         res.json(assignmentsBlob);
                     }
