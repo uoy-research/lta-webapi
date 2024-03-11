@@ -1145,7 +1145,7 @@ export class SurveyService {
 
             if (a.dataset) {
                 a.dataset.answers.forEach((answer: any) => {
-                    var indexStr = SurveyService.pad(answer.index, 2); //todo handle more than 99 questions
+                    var indexStr = (answer.index < 100) ? SurveyService.pad(answer.index, 2) : answer.index.toString();
                     if (answer.type == "single" || answer.type == "duration" || answer.type == "likert" || answer.type == "blanks") {
                         dynJmesPath += `, "q${indexStr}": '${answer.intValue}'`;
                     } else if (answer.type == "open") {
