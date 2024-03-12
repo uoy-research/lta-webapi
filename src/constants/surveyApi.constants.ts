@@ -11,14 +11,9 @@ export const FIREBASE_DATABASE = config.firebase_database
 
 export const JMESPATH_dataset = `{
     "userId": userId,
-    "_id": _id,
-    "createdAt": createdAt,
-    "publishAt": publishAt,
-    "expireAt": expireAt,
-    "firstOpenedAt": firstOpenedAt,
-    "lastOpenedAt": lastOpenedAt,
-    "dataset._id": dataset._id,
-    "dataset.createdAt": dataset.createdAt
+    "surveyStart": publishAt,
+    "surveyEnd": expireAt,
+    "surveySubmitted": dataset.createdAt
     `;
 
 export const NOTIFICATION_CHECK_INTERVAL_MS = 10 * 1000; // how often do we check if it's time to send a notif
