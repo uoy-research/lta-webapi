@@ -1135,7 +1135,28 @@ export class SurveyService {
     //                                         }            
     // }
 
-    private static getDatasetsOfAssignments(assignments: any) {
+    async private static getQuestionKeys(surveyId: any) {
+        let template = []
+
+        let surveys = await Survey.find({ "_id": surveyId })
+        let survey = surveys[0]
+
+        survey.questions.forEach((question) => {
+                let index = (question.index < 100) ? SurveyService.pad(question.index, 2) : question.index.toString();
+
+                template.push(`q${index}`)
+
+                if (question.type == "multi") {
+                    for (let i = 0; i < question.values.length; i++) {
+                        template.push(`q${index}.${i}`)
+                    }
+                }
+        })
+
+        return template
+    }
+
+    private static getDatasetsOfAssignments(assignments: any, questions: any) {
 
         let flattened = new Array();
 
@@ -1159,7 +1180,7 @@ export class SurveyService {
                             dynJmesPath += `, "q${indexStr}.${vt}": '1'`;
                         });
                     } else {
-                        dynJmesPath += `, "q${indexStr}": ''`;
+                        dynJmesPath += `, "q${indexStr}": '-999'`;
                     }
                 });
 
@@ -1167,9 +1188,24 @@ export class SurveyService {
                 console.log("here the dynJmesPath: " + dynJmesPath);
 
                 let flatA = jmespath.search(a, dynJmesPath);
-                console.log("here the resulting json: " + JSON.stringify(flatA));
+                
+                let flatB = {}
+                for (const [key, value] of Object.entries(flatA)) {
+                    if (key[0] != 'q') {
+                        flatB[key] = value
+                    }
+                }
+                questions.forEach((q) => {
+                    if (q in flatA) {
+                        flatB[q] = flatA[q]
+                    } else {
+                        flatB[q] = "-999"
+                    }
+                })
 
-                flattened.push(flatA);
+                console.log("here the resulting json: " + JSON.stringify(flatB));
+
+                flattened.push(flatB);
             } else {
                 console.log("assignment " + a._id + " does not have a dataset.")
             }
@@ -1185,13 +1221,17 @@ export class SurveyService {
 
             const surveyId = req.params.sid as String;
 
-            Assignment.find({ "survey._id": surveyId })
-            .sort('-publishedAt')
-            .then((assignments: any) => {
-                res.json(SurveyService.getDatasetsOfAssignments(assignments));
-            }).catch((error: Error) => {
-                res.send(error);
-            });
+            SurveyService.getQuestionKeys(surveyId)
+            .then((surveyTemplate: any) => {
+
+                Assignment.find({ "survey._id": surveyId })
+                .sort('-publishedAt')
+                .then((assignments: any) => {
+                    res.json(SurveyService.getDatasetsOfAssignments(assignments, surveyTemplate));
+                }).catch((error: Error) => {
+                    res.send(error);
+                });
+            })
         });
     }
 
@@ -1201,60 +1241,68 @@ export class SurveyService {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
             const surveyId = req.params.sid as String;
 
-            Assignment.find({ "survey._id": surveyId })
-            .sort('-publishedAt')
-            .then((assignments: any) => {
-                SurveyService.dbgMsg("found " + assignments.length + " assignments of survey " + surveyId);
-                let assignmentsBlob = SurveyService.getDatasetsOfAssignments(assignments);
-                try {
-                    let csv = converter(assignmentsBlob);
-                    console.log("here the resulting csv: " + csv);
-                    res.send(csv);
-                } catch {
-                    let err = "Could not convert JSON to CSV";
-                    console.log(err);
-                    res.send(err);
-                }
-            }).catch((error: Error) => {
-                res.send(error);
-            });
+            SurveyService.getQuestionKeys(surveyId)
+            .then((surveyTemplate: any) => {
+
+                Assignment.find({ "survey._id": surveyId })
+                .sort('-publishedAt')
+                .then((assignments: any) => {
+                    SurveyService.dbgMsg("found " + assignments.length + " assignments of survey " + surveyId);
+                    let assignmentsBlob = SurveyService.getDatasetsOfAssignments(assignments, surveyTemplate);
+                    try {
+                        let csv = converter(assignmentsBlob);
+                        console.log("here the resulting csv: " + csv);
+                        res.send(csv);
+                    } catch {
+                        let err = "Could not convert JSON to CSV";
+                        console.log(err);
+                        res.send(err);
+                    }
+                }).catch((error: Error) => {
+                    res.send(error);
+                });
+            })
         });
     }
 
-    public getAllDatasetsOfSurvey_ar(req: Request, res: Response, format: String) {
+    async public getAllDatasetsOfSurvey_ar(req: Request, res: Response, format: String) {
         SurveyService.dbgReq(req);
         checkIfAuthenticatedAdmin(req, res, (uid: string) => {
             SurveyService.dbgMsg("greetings admin " + uid + "!");
 
             const surveyId = req.params.sid as String;
 
-            Assignment.find({ "survey._id": surveyId })
-            .then((assignments: any) => {
-                var arrayOfAssIds = assignments.map(function (a: any) { return a._id; })
+            SurveyService.getQuestionKeys(surveyId)
+            .then((surveyTemplate: any) => {
 
-                AssignmentResults.find()
-                .where('assignment')
-                .in(arrayOfAssIds)
-                .then((assignmentResults: any) => {
-                    let assignmentsBlob = SurveyService.getDatasetsOfAssignments(assignmentResults);
-                    if (format === "csv") {
-                        try {
-                            let csv = converter(assignmentsBlob);
-                            console.log("here the resulting csv: " + csv);
-                            res.send(csv);
-                        } catch {
-                            let err = "Could not convert JSON to CSV";
-                            console.log(err);
-                            res.send(err);
+                Assignment.find({ "survey._id": surveyId })
+                .then((assignments: any) => {
+                    var arrayOfAssIds = assignments.map(function (a: any) { return a._id; })
+
+                    AssignmentResults.find()
+                    .where('assignment')
+                    .in(arrayOfAssIds)
+                    .then((assignmentResults: any) => {
+                        let assignmentsBlob = SurveyService.getDatasetsOfAssignments(assignmentResults, surveyTemplate);
+                        if (format === "csv") {
+                            try {
+                                let csv = converter(assignmentsBlob);
+                                console.log("here the resulting csv: " + csv);
+                                res.send(csv);
+                            } catch {
+                                let err = "Could not convert JSON to CSV";
+                                console.log(err);
+                                res.send(err);
+                            }
+                        } else {
+                            res.json(assignmentsBlob);
                         }
-                    } else {
-                        res.json(assignmentsBlob);
-                    }
+                    }).catch((error: Error) => {
+                        res.send(error);
+                    })
                 }).catch((error: Error) => {
                     res.send(error);
                 })
-            }).catch((error: Error) => {
-                res.send(error);
             })
         })
     }
