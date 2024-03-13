@@ -1144,12 +1144,12 @@ export class SurveyService {
         survey.questions.forEach((question) => {
                 let index = (question.index < 100) ? SurveyService.pad(question.index, 2) : question.index.toString();
 
-                template.push(`q${index}`)
-
                 if (question.type == "multi") {
                     for (let i = 0; i < question.values.length; i++) {
-                        template.push(`q${index}.${i}`)
+                        template.push(`q${index}.${i+1}`)
                     }
+                } else {
+                    template.push(`q${index}`)
                 }
         })
 
@@ -1176,7 +1176,7 @@ export class SurveyService {
                         console.log("multiValueString = " + multiValueString)
                         dynJmesPath += `, "q${indexStr}": '${multiValueString}'`;
                         (answer.multiValue + ``).split(',').forEach((v: string) => {
-                            let vt = v.trim();
+                            let vt = (Number(v.trim()) + 1).toString();
                             dynJmesPath += `, "q${indexStr}.${vt}": '1'`;
                         });
                     } else {
@@ -1198,6 +1198,8 @@ export class SurveyService {
                 questions.forEach((q) => {
                     if (q in flatA) {
                         flatB[q] = flatA[q]
+                    } else if (q.includes('.')) {
+                        flatB[q] = "0"
                     } else {
                         flatB[q] = "-999"
                     }
