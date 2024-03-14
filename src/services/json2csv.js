@@ -95,7 +95,9 @@
   }
 
 	function convert(data, options) {
-		options || (options = {});
+		options || (options = {
+      output_csvjson_variant: true
+    });
 		
     if (!isObject(data)) throw errorNotAnArray;
     if (!Array.isArray(data)) data = [data];
@@ -120,12 +122,12 @@
     		var value = o[key];
     		if (value === undefined && value === null) continue;
         if (typeof value == 'string') {
-          row[key] = '"' + value.replace(/"/g, options.output_csvjson_variant ? '""' : '""') + '"';
+          row[key] = '"' + value.replace(/"/g, options.output_csvjson_variant ? '\\"' : '""') + '"';
           if (options.output_csvjson_variant) row[key] = row[key].replace(/\n/g, '\\n');
         } else {
           row[key] = JSON.stringify(value);
           if (!options.output_csvjson_variant && (isObject(value) || Array.isArray(value)))
-            row[key] = '"' + row[key].replace(/"/g, '""').replace(/\n/g, '\\n') + '"';
+            row[key] = '"' + row[key].replace(/"/g, '\\"').replace(/\n/g, '\\n') + '"';
         }
     	}
     	allRows.push(row);
@@ -133,7 +135,7 @@
 
     keyValues = [];
     for (var i = 0; i < allKeys.length; i++) {
-      keyValues.push('"' + allKeys[i].replace(/"/g, options.output_csvjson_variant ? '""' : '""') + '"');
+      keyValues.push('"' + allKeys[i].replace(/"/g, options.output_csvjson_variant ? '\\"' : '""') + '"');
     }
 
     var csv = keyValues.join(separator)+'\n';
