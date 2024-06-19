@@ -8,11 +8,10 @@ var moment = require('moment-timezone');
 
 var jmespath = require('jmespath');
 
-const TIMEZONE = "Europe/London"
-
 import { Survey, Assignment, AssignmentResults, Dataset, User, Group } from "../models/survey.model";
 
 import {
+    TIMEZONE,
     ADMIN_USERNAMES,
     EMAIL_DOMAIN,
     PING_MESSAGE,
