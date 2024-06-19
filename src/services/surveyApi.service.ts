@@ -310,7 +310,7 @@ export class SurveyService {
             const condition = { groupId: req.params.gid };
             let options = { upsert: false, new: false };
 
-            SurveyService.dbgMsg("checking for " + req.params.gid);
+            //SurveyService.dbgMsg("checking for " + req.params.gid);
             Group.findOneAndUpdate(
                 condition,
                 req.body,
@@ -1328,7 +1328,7 @@ export class SurveyService {
         }).populate('assignment')
         .then((assignmentResults: any) => {
             if (assignmentResults.length == 0) {
-                SurveyService.dbgMsg("None AssignmentResults to publish found. ");
+                //SurveyService.dbgMsg("None AssignmentResults to publish found. ");
             }
 
             assignmentResults.forEach((ar: any) => {
@@ -1349,7 +1349,7 @@ export class SurveyService {
             console.log(error);
         })
 
-        SurveyService.dbgMsg(`Checking for publishAt within ${from} and ${to} but not yet notified. `);
+        //SurveyService.dbgMsg(`Checking for publishAt within ${from} and ${to} but not yet notified. `);
 
         Assignment.find({
             publishAt: {
@@ -1360,7 +1360,7 @@ export class SurveyService {
         }).sort('-createdAt')
         .then((assignments: any) => {
             if (assignments.length == 0) {
-                SurveyService.dbgMsg("None Published found. ");
+                //SurveyService.dbgMsg("None Published found. ");
             }
 
             assignments.forEach((a: any) => {
@@ -1385,7 +1385,7 @@ export class SurveyService {
         var from = moment().utc();
         var to = moment().utc().add(NOTIFY_EXPIRE_IN_MINUTES, "m");;
 
-        SurveyService.dbgMsg(`Checking for Expiring within ${from} and ${to} but not yet notified. `);
+        //SurveyService.dbgMsg(`Checking for Expiring within ${from} and ${to} but not yet notified. `);
 
         Assignment.find({
             expireAt: {
@@ -1397,7 +1397,7 @@ export class SurveyService {
         }).sort('-createdAt')
         .then((assignments: any) => {
             if (assignments.length == 0) {
-                SurveyService.dbgMsg("None expiring found. ");
+                //SurveyService.dbgMsg("None expiring found. ");
             }
 
             assignments.forEach((a: any) => {
@@ -1426,7 +1426,7 @@ export class SurveyService {
         }).populate('assignment')
         .then((assignmentResults: any) => {
             if (assignmentResults.length == 0) {
-                SurveyService.dbgMsg("None AssignmentResults to publish found. ");
+                //SurveyService.dbgMsg("None AssignmentResults to publish found. ");
             }
 
             assignmentResults.forEach((ar: any) => {
@@ -1454,7 +1454,7 @@ export class SurveyService {
         var from = moment().add(-1, "d").add(-1, "h").utc();
         var to = moment().add(1, "d").add(1, "h").utc();
 
-        SurveyService.dbgMsg(`Checking for publishFrom – publishTo overlapping ${from} – ${to} but not yet notified. `);
+        //SurveyService.dbgMsg(`Checking for publishFrom – publishTo overlapping ${from} – ${to} but not yet notified. `);
 
         Assignment.find({
             publishFrom: {
@@ -1466,7 +1466,7 @@ export class SurveyService {
         }).sort('-createdAt')
         .then((assignments: any) => {
             if (!assignments.length) {
-                SurveyService.dbgMsg("None publishFrom – publishTo found. ");
+                //SurveyService.dbgMsg("None publishFrom – publishTo found. ");
             }
 
             assignments.forEach((a: any) => {
